@@ -9,16 +9,9 @@
 </head>
 <body class="oscuro lluvioso">
 
-  <!-- Splash Screen -->
-  <div id="splash">
-    <h1>Bienvenido a la Ciudadela Mágica</h1>
-  </div>
-
-  <!-- Contenido principal -->
   <header>
     <h1>Ciudadela de Harry Potter</h1>
     <input type="text" id="buscador" placeholder="Buscar personaje..." oninput="buscarPersonaje()">
-    <h1>Hogwarts Explorer</h1>
     <nav class="navegacion">
       <button class="pestaña" onclick="mostrarSeccion('inicio')">Inicio</button>
       <button class="pestaña" onclick="mostrarSeccion('registro')">Registro</button>
@@ -32,17 +25,11 @@
   <main>
     <section id="inicio" class="seccion">
       <h2>Bienvenido a la Ciudadela</h2>
-      <p>Entra en un mundo oculto más allá del andén 9¾, donde la magia y la aventura nunca terminan. 
-         Explora los pasillos de Hogwarts, descubre secretos en la aldea de Hogsmeade y enfréntate a misterios ancestrales.</p>
-      <p>Conoce a los magos más legendarios, explora las casas de Gryffindor, Slytherin, Ravenclaw y Hufflepuff, 
-         y prepárate para vivir una experiencia que solo los verdaderos hechiceros pueden comprender.</p>
-      <p>¡Adelante, joven mago! La Ciudadela Mágica te espera. 🎭</p>
+      <p>Explora los pasillos de Hogwarts, descubre secretos y enfréntate a misterios ancestrales.</p>
     </section>
 
     <section id="personajes" class="seccion oculto">
       <h2>Personajes</h2>
-
-      <!-- Filtro -->
       <div id="filtro-container">
         <label for="filtro-casa">Filtrar por casa:</label>
         <select id="filtro-casa" onchange="filtrarPorCasa()">
@@ -53,7 +40,6 @@
           <option value="Ravenclaw">Ravenclaw</option>
         </select>
       </div>
-
       <div id="personajes-lista" class="grid-personajes"></div>
     </section>
 
@@ -65,35 +51,53 @@
     <section id="registro" class="seccion oculto">
       <h2>Registro de Magos</h2>
       <form id="registro-form">
-        <input type="text" name="nombre" placeholder="Nombre" required>
-        <input type="email" name="email" placeholder="Correo" required>
-        <input type="text" name="usuario" placeholder="Usuario" required>
-        <input type="password" name="contraseña" placeholder="Contraseña" required>
-        <input type="text" name="casa" placeholder="Casa" required>
-        <input type="text" name="varita" placeholder="Varita mágica" required>
-        <input type="date" name="nacimiento" placeholder="Fecha de nacimiento" required>
+        <input type="text" id="nombre" placeholder="Nombre" required>
+        <input type="email" id="email" placeholder="Correo" required>
+        <input type="text" id="usuario" placeholder="Usuario" required>
+        <input type="password" id="contraseña" placeholder="Contraseña" required>
+        <input type="text" id="casa" placeholder="Casa" required>
+        <input type="text" id="varita" placeholder="Varita mágica" required>
+        <input type="date" id="nacimiento" required>
         <button type="submit">Registrar</button>
       </form>
     </section>
 
+    <!-- Nueva sección de Hechizos -->
+    <section id="hechizos" class="seccion oculto">
+      <h2>Hechizos</h2>
+      <p>Descubre los hechizos más poderosos y útiles del mundo mágico:</p>
+      <ul>
+        <li><strong>Expelliarmus:</strong> Hechizo de desarme utilizado en duelos.</li>
+        <li><strong>Lumos:</strong> Produce luz en la punta de la varita.</li>
+        <li><strong>Expecto Patronum:</strong> Invoca un Patronus para repeler Dementores.</li>
+        <li><strong>Wingardium Leviosa:</strong> Permite levitar objetos.</li>
+        <li><strong>Avada Kedavra:</strong> Maldición asesina prohibida.</li>
+      </ul>
+    </section>
+
+    <!-- Nueva sección de Casas -->
+    <section id="casas" class="seccion oculto">
+      <h2>Casas de Hogwarts</h2>
+      <p>En Hogwarts, los estudiantes son asignados a una de las cuatro casas, cada una con sus propios valores:</p>
+      <ul>
+        <li><strong>Gryffindor:</strong> Valora el coraje, la valentía y la determinación.</li>
+        <li><strong>Hufflepuff:</strong> Premia la lealtad, la paciencia y el trabajo duro.</li>
+        <li><strong>Ravenclaw:</strong> Exalta la inteligencia, la creatividad y la sabiduría.</li>
+        <li><strong>Slytherin:</strong> Destaca la astucia, la ambición y el liderazgo.</li>
+      </ul>
+    </section>
+
     <section id="contacto" class="seccion oculto">
       <h2>Contacto</h2>
-      <p>¿Tienes preguntas sobre Hogwarts, sus secretos o los hechizos que enseñamos?</p>
-      <p>No dudes en comunicarte con nosotros a través de nuestros canales mágicos. ¡Un elfo doméstico se encargará de responderte!</p>
-      
+      <p>¿Tienes preguntas? ¡Contáctanos!</p>
       <ul class="contacto-info">
         <li>📧 Correo: contacto@hogwartsexplorer.com</li>
-        <li>📜 Dirección: Callejón Diagon, Londres Mágico</li>
-        <li>🧙‍♂️ Teléfono Mágico: +44 123 456 789</li>
-        <li>🚇 Estacion: Estación de King's Cross en Londres 9¾</li>
+        <li>📜 Dirección: Callejón Diagon, Londres</li>
+        <li>🧙‍♂️ Teléfono: +44 123 456 789</li>
       </ul>
-    
-      <p>También puedes enviarnos una lechuza tradicional si prefieres métodos más clásicos. ¡Esperamos saber de ti!</p>
     </section>
-    
   </main>
 
-  <!-- Footer -->
   <footer>
     <button onclick="mostrarSeccion('inicio')">Inicio</button>
     <button onclick="mostrarSeccion('personajes')">Personajes</button>
@@ -101,6 +105,6 @@
     <button onclick="mostrarSeccion('registro')">Registro</button>
   </footer>
 
-  <script src="script.js"></script>
+  <script type="module" src="script.js"></script>
 </body>
 </html>
