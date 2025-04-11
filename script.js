@@ -1,122 +1,105 @@
-// app.js
+// script.js
 
 // Splash Screen
 window.addEventListener('load', () => {
     setTimeout(() => {
-        document.getElementById('splash').style.display = 'none';
+      document.getElementById('splash').style.display = 'none';
     }, 2000);
-});
-
-// Tabs Navigation
-const tabs = document.querySelectorAll('#tabs button, footer button');
-const contents = document.querySelectorAll('.tab-content');
-
-tabs.forEach(tab => {
-    tab.addEventListener('click', () => {
-        const target = tab.dataset.tab;
-        contents.forEach(c => c.classList.remove('active'));
-        document.getElementById(target).classList.add('active');
-    });
-});
-
-// Modo oscuro automático
-const hour = new Date().getHours();
-if (hour >= 19 || hour <= 7) {
-    document.body.setAttribute('data-theme', 'dark');
-}
-
-// Fetch personajes (fake API con opción para Harry Potter)
-const API_URL = 'https://hp-api.onrender.com/api/characters';
-
-async function fetchCharacters() {
-    try {
-        const res = await fetch(API_URL);
-        const characters = await res.json();
-        displayCharacters(characters);
-    } catch (err) {
-        console.error('Error al cargar personajes:', err);
+  });
+  
+  // Variables globales
+  let personajesGlobal = [];
+  
+  // Cargar personajes
+  fetch('https://hp-api.onrender.com/api/characters')
+    .then(response => response.json())
+    .then(data => {
+      personajesGlobal = data;
+      cargarPersonajes(data);
+    })
+    .catch(error => console.error('Error al cargar personajes:', error));
+  
+  // Mostrar/ocultar secciones
+  function mostrarSeccion(id) {
+    const secciones = document.querySelectorAll('.seccion');
+    secciones.forEach(sec => sec.classList.add('oculto'));
+  
+    const activa = document.getElementById(id);
+    if (activa) {
+      activa.classList.remove('oculto');
     }
-}
-
-function displayCharacters(data) {
-    const list = document.getElementById('character-list');
-    list.innerHTML = '';
-
-    data.forEach(char => {
-        const card = document.createElement('div');
-        card.innerHTML = `
-            <h4>${char.name}</h4>
-            <p>${char.house || 'Sin casa'}</p>
-            <button onclick='addFavorite("${char.name}")'>💖 Fav</button>
-        `;
-        list.appendChild(card);
+  }
+  
+  // Cargar tarjetas de personajes
+  function cargarPersonajes(personajes) {
+    const contenedor = document.getElementById('personajes-lista');
+    contenedor.innerHTML = '';
+  
+    personajes.forEach(personaje => {
+      const card = document.createElement('div');
+      card.classList.add('personaje-card');
+      card.innerHTML = `
+        <img src="${personaje.image || 'https://via.placeholder.com/150'}" alt="${personaje.name}">
+        <h3>${personaje.name}</h3>
+        <p>${personaje.house || 'Sin casa'}</p>
+        <button onclick="agregarFavorito('${personaje.name}')">⭐ Favorito</button>
+      `;
+      contenedor.appendChild(card);
     });
-}
-
-fetchCharacters();
-
-// Buscador
-const search = document.getElementById('search');
-search.addEventListener('input', async (e) => {
-    const query = e.target.value.toLowerCase();
-    const res = await fetch(API_URL);
-    const data = await res.json();
-    const filtered = data.filter(char => char.name.toLowerCase().includes(query));
-    displayCharacters(filtered);
-});
-
-// Filtro por casa
-const filterHouse = document.getElementById('filter-house');
-filterHouse.addEventListener('change', async (e) => {
-    const house = e.target.value;
-    const res = await fetch(API_URL);
-    const data = await res.json();
-    const filtered = house ? data.filter(char => char.house === house) : data;
-    displayCharacters(filtered);
-});
-
-// CRUD de favoritos en localStorage
-function addFavorite(name) {
-    let favs = JSON.parse(localStorage.getItem('favorites')) || [];
-    if (!favs.includes(name)) {
-        favs.push(name);
-        localStorage.setItem('favorites', JSON.stringify(favs));
-        loadFavorites();
+  }
+  
+  // Filtrar por casa
+  function filtrarPorCasa() {
+    const casaSeleccionada = document.getElementById('filtro-casa').value;
+  
+    if (casaSeleccionada === '') {
+      cargarPersonajes(personajesGlobal);
+    } else {
+      const filtrados = personajesGlobal.filter(p => p.house === casaSeleccionada);
+      cargarPersonajes(filtrados);
     }
-}
-
-function removeFavorite(name) {
-    let favs = JSON.parse(localStorage.getItem('favorites')) || [];
-    favs = favs.filter(fav => fav !== name);
-    localStorage.setItem('favorites', JSON.stringify(favs));
-    loadFavorites();
-}
-
-function loadFavorites() {
-    const favList = document.getElementById('favorites-list');
-    favList.innerHTML = '';
-    const favs = JSON.parse(localStorage.getItem('favorites')) || [];
-
-    favs.forEach(name => {
-        const card = document.createElement('div');
-        card.innerHTML = `
-            <h4>${name}</h4>
-            <button onclick='removeFavorite("${name}")'>❌ Quitar</button>
-        `;
-        favList.appendChild(card);
+  }
+  
+  // Buscar por nombre
+  function buscarPersonaje() {
+    const texto = document.getElementById('buscador').value.toLowerCase();
+    const filtrados = personajesGlobal.filter(p => p.name.toLowerCase().includes(texto));
+    cargarPersonajes(filtrados);
+  }
+  
+  // CRUD de Favoritos (localStorage)
+  function agregarFavorito(nombre) {
+    let favoritos = JSON.parse(localStorage.getItem('favoritos')) || [];
+    if (!favoritos.includes(nombre)) {
+      favoritos.push(nombre);
+      localStorage.setItem('favoritos', JSON.stringify(favoritos));
+      alert('Agregado a favoritos!');
+      mostrarFavoritos();
+    }
+  }
+  
+  function mostrarFavoritos() {
+    const lista = document.getElementById('favoritos-lista');
+    lista.innerHTML = '';
+  
+    const favoritos = JSON.parse(localStorage.getItem('favoritos')) || [];
+    favoritos.forEach(nombre => {
+      const item = document.createElement('div');
+      item.textContent = nombre;
+      lista.appendChild(item);
     });
-}
-
-// Cargar favoritos al inicio
-loadFavorites();
-
-// Formulario de Registro
-const form = document.getElementById('registration-form');
-form.addEventListener('submit', (e) => {
+  }
+  
+  // Registro (espacio para Firebase)
+  const registroForm = document.getElementById('registro-form');
+  registroForm.addEventListener('submit', (e) => {
     e.preventDefault();
-    const data = new FormData(form);
-    const values = Object.fromEntries(data.entries());
-    console.log('Registrado:', values);
-    alert('¡Registro exitoso!');
-    form.reset();
-});
+    const formData = new FormData(registroForm);
+    const datos = Object.fromEntries(formData.entries());
+  
+    console.log('Registrar en Firebase:', datos);
+    // 🔥 Aquí conectarías a tu base de datos Firebase!
+    registroForm.reset();
+    alert('Registro exitoso!');
+  });
+  
