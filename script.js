@@ -1,22 +1,21 @@
-// script.js
 import { initializeApp } from 'https://www.gstatic.com/firebasejs/9.6.0/firebase-app.js';
 import { getFirestore, collection, addDoc } from 'https://www.gstatic.com/firebasejs/9.6.0/firebase-firestore.js';
 
-// Configuración de Firebase
 const firebaseConfig = {
   apiKey: "AIzaSyA-A2KdSyt7RPA4bTuj_HLH82ojFxj_RmM",
   authDomain: "harry-potter-df717.firebaseapp.com",
   projectId: "harry-potter-df717",
-  storageBucket: "harry-potter-df717.appspot.com", // OJO: aquí había un error en tu storageBucket
+  storageBucket: "harry-potter-df717.appspot.com",
   messagingSenderId: "305991600613",
   appId: "1:305991600613:web:badd9c4c9badc920b2870c"
 };
 
-// Inicializar Firebase
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
-// Mostrar secciones
+let personajesGlobal = [];
+let favoritos = [];
+
 function mostrarSeccion(id) {
   document.querySelectorAll('.seccion').forEach(seccion => {
     seccion.classList.add('oculto');
@@ -24,10 +23,8 @@ function mostrarSeccion(id) {
   document.getElementById(id).classList.remove('oculto');
 }
 
-// Función para agregar un mago a Firebase
 async function agregarDocumento(event) {
   event.preventDefault();
-  
   const nombre = document.getElementById('nombre').value;
   const email = document.getElementById('email').value;
   const usuario = document.getElementById('usuario').value;
@@ -38,13 +35,7 @@ async function agregarDocumento(event) {
 
   try {
     await addDoc(collection(db, 'magos'), {
-      nombre,
-      email,
-      usuario,
-      contraseña,
-      casa,
-      varita,
-      nacimiento
+      nombre, email, usuario, contraseña, casa, varita, nacimiento
     });
     alert('¡Mago registrado exitosamente!');
     document.getElementById('registro-form').reset();
@@ -53,21 +44,20 @@ async function agregarDocumento(event) {
   }
 }
 
-// Función para obtener personajes de la API
 async function obtenerPersonajes() {
   try {
     const respuesta = await fetch('https://hp-api.onrender.com/api/characters');
     const personajes = await respuesta.json();
+    personajesGlobal = personajes;
     mostrarPersonajes(personajes);
   } catch (error) {
     console.error('Error al obtener personajes:', error);
   }
 }
 
-// Función para mostrar los personajes en tarjetas
 function mostrarPersonajes(personajes) {
-  const contenedor = document.getElementById('personajes');
-  contenedor.innerHTML = ''; // Limpiar
+  const contenedor = document.getElementById('personajes-lista');
+  contenedor.innerHTML = '';
 
   personajes.forEach(personaje => {
     const card = document.createElement('div');
@@ -79,13 +69,61 @@ function mostrarPersonajes(personajes) {
       <h3>${personaje.name}</h3>
       <p><strong>Casa:</strong> ${personaje.house || 'Desconocido'}</p>
       <p><strong>Actor:</strong> ${personaje.actor || 'Desconocido'}</p>
+      <button onclick='agregarAFavoritos(${JSON.stringify(personaje).replace(/'/g, "\\'")})'>⭐ Agregar a Favoritos</button>
     `;
 
     contenedor.appendChild(card);
   });
 }
 
-// Buscar personajes por nombre
+function agregarAFavoritos(personaje) {
+  if (!favoritos.some(fav => fav.name === personaje.name)) {
+    favoritos.push(personaje);
+    guardarFavoritos();
+    mostrarFavoritos();
+  }
+}
+
+function eliminarDeFavoritos(personaje) {
+  favoritos = favoritos.filter(fav => fav.name !== personaje.name);
+  guardarFavoritos();
+  mostrarFavoritos();
+}
+
+function mostrarFavoritos() {
+  const contenedor = document.getElementById("favoritos-lista");
+  contenedor.innerHTML = "";
+
+  if (favoritos.length === 0) {
+    contenedor.innerHTML = "<p>No tienes personajes favoritos aún.</p>";
+    return;
+  }
+
+  favoritos.forEach(p => {
+    const div = document.createElement("div");
+    div.className = "personaje-card";
+    div.innerHTML = `
+      <img src="${p.image || 'https://via.placeholder.com/150'}" alt="${p.name}" width="200">
+      <h3>${p.name}</h3>
+      <p><strong>Casa:</strong> ${p.house || "Sin casa"}</p>
+      <button onclick='eliminarDeFavoritos(${JSON.stringify(p).replace(/'/g, "\\'")})'>❌ Eliminar de Favoritos</button>
+    `;
+    contenedor.appendChild(div);
+  });
+}
+
+function guardarFavoritos() {
+  localStorage.setItem("favoritosHP", JSON.stringify(favoritos));
+}
+
+function cargarFavoritos() {
+  const data = localStorage.getItem("favoritosHP");
+  if (data) {
+    favoritos = JSON.parse(data);
+    mostrarFavoritos();
+  }
+}
+
 function buscarPersonaje() {
   const input = document.getElementById('buscador').value.toLowerCase();
   const personajes = document.querySelectorAll('.personaje-card');
@@ -95,7 +133,6 @@ function buscarPersonaje() {
   });
 }
 
-// Filtrar personajes por casa
 function filtrarPorCasa() {
   const casa = document.getElementById('filtro-casa').value;
   const personajes = document.querySelectorAll('.personaje-card');
@@ -108,15 +145,16 @@ function filtrarPorCasa() {
   });
 }
 
-// Vincular eventos
+// Eventos
 document.getElementById('registro-form').addEventListener('submit', agregarDocumento);
 
-// Exponer funciones al window para poder usarlas en HTML
+document.addEventListener('DOMContentLoaded', () => {
+  obtenerPersonajes();
+  cargarFavoritos();
+});
+
 window.mostrarSeccion = mostrarSeccion;
 window.buscarPersonaje = buscarPersonaje;
 window.filtrarPorCasa = filtrarPorCasa;
-
-// Ejecutar al cargar
-document.addEventListener('DOMContentLoaded', () => {
-  obtenerPersonajes();
-});
+window.agregarAFavoritos = agregarAFavoritos;
+window.eliminarDeFavoritos = eliminarDeFavoritos;

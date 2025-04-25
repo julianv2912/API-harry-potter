@@ -48,9 +48,24 @@
       <div id="favoritos-lista"></div>
     </section>
 
-    <section id="Informacion" class="seccion oculto">
-      <h2>Pestaña Informativa</h2>
-      <div id="favoritos-lista"></div>
+    <section id="informativa" class="seccion oculto">
+      <div class="informacion-pestaña">
+        <div class="informacion-contenido">
+          <h2 class="titulo-api">API de Personajes de Harry Potter</h2> <!-- Título de la API -->
+          <img src="imagen/harry.gif" alt="Imagen relacionada con la temática" class="imagen-api"> <!-- Imagen PNG relacionada -->
+          <div class="descripcion-api">
+            <p>
+              Esta es una API que proporciona información detallada sobre personajes de toda la saga de las peliculas de Harry Potter.
+            </p>
+          </div>
+          <div class="usuario-github">
+            <p>GitHub: <a href="https://github.com/julianv2912" target="_blank">perfil github</a></p> <!-- Usuario de GitHub -->
+          </div>
+          <p class="version">Versión de la app: V.1.0.0</p> <!-- Versión de la app -->
+          <p>Estudiante: Oscar Julian Villamarin Wilches</p> <!-- Nombre del estudiante -->
+          <p>Universitaria agustiniana</p> <!-- Nombre del estudiante -->
+        </div>
+      </div>
     </section>
 
     <section id="registro" class="seccion oculto">
@@ -108,6 +123,7 @@
     <button onclick="mostrarSeccion('personajes')">Personajes</button>
     <button onclick="mostrarSeccion('favoritos')">Favoritos</button>
     <button onclick="mostrarSeccion('registro')">Registro</button>
+    <button onclick="mostrarSeccion('informativa')">Informativa</button>
   </footer>
 
   <script type="module" src="script.js"></script>

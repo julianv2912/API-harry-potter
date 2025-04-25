@@ -1,4 +1,3 @@
-/* estilos.css */
 body.oscuro {
   background-color: #1a1a1a;
   color: #f5f5f5;
@@ -122,21 +121,8 @@ footer button:hover {
   display: none;
 }
 
-#splash {
-  position: fixed;
-  background: #000;
-  color: #f5f5f5;
-  width: 100%;
-  height: 100%;
-  font-size: 2rem;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  z-index: 9999;
-}
-
-/* --- CORRECCIÓN Y MEJORA DE PERSONAJES --- */
-.grid-personajes {
+/* --- CORRECCIÓN Y MEJORA DE PERSONAJES Y FAVORITOS --- */
+.grid-personajes, #favoritos-lista {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
   gap: 25px;
@@ -144,60 +130,70 @@ footer button:hover {
   padding: 0 20px;
 }
 
-.personaje-card {
-  background: linear-gradient(135deg, #2c2c2c, #1a1a1a);
-  padding: 20px;
-  border-radius: 15px;
+/* Estilo común para las tarjetas de personajes y favoritos */
+.personaje-card, .favorito-card {
+  background-color: #1e1e1e;
+  border-radius: 16px;
+  padding: 15px;
   text-align: center;
-  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.6);
-  transition: transform 0.3s, box-shadow 0.3s;
-  position: relative;
-  overflow: hidden;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  margin: 10px;
 }
 
-.personaje-card:hover {
-  transform: translateY(-8px);
+.personaje-card:hover, .favorito-card:hover {
+  transform: scale(1.03);
+  box-shadow: 0 12px 30px rgba(255, 215, 0, 0.4);
+}
+
+/* Imagen de las tarjetas */
+.personaje-card img, .favorito-card img {
+  width: 100%;
+  height: 320px; /* Aseguramos que las imágenes tengan el mismo tamaño */
+  object-fit: cover; /* Mantiene la imagen sin deformarla */
+  border-radius: 15px;
+  margin-bottom: 15px;
+  border: 2px solid #ffd700; /* Acento dorado, similar al estilo de Hogwarts */
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.6);
+}
+
+.personaje-card img:hover, .favorito-card img:hover {
+  transform: scale(1.05);
   box-shadow: 0 12px 24px rgba(255, 215, 0, 0.4);
 }
 
-.personaje-card img {
-  width: 100%;
-  height: 250px;
-  object-fit: cover;
-  border-radius: 12px;
-  margin-bottom: 15px;
-  transition: transform 0.3s;
-}
-
-.personaje-card:hover img {
-  transform: scale(1.05);
-}
-
-.personaje-card h3 {
-  font-size: 1.5rem;
+/* Títulos */
+.personaje-card h3, .favorito-card h3 {
+  font-size: 1.6rem;
   color: #ffd700;
-  margin: 10px 0;
+  margin: 10px 0 5px 0;
 }
 
-.personaje-card p {
+/* Descripción de las tarjetas */
+.personaje-card p, .favorito-card p {
   font-size: 1rem;
-  color: #ccc;
+  color: #ddd;
   margin: 5px 0;
 }
 
-.personaje-card .casa {
-  margin-top: 10px;
+/* Información de la casa */
+.personaje-card .casa, .favorito-card .casa {
+  margin-top: 12px;
   display: inline-block;
-  padding: 6px 12px;
-  background-color: #5c3aff;
-  color: white;
-  border-radius: 20px;
+  padding: 6px 14px;
+  background: rgba(92, 58, 255, 0.85);
+  border-radius: 25px;
   font-size: 0.9rem;
+  color: white;
+  font-weight: bold;
+  text-transform: uppercase;
+  letter-spacing: 1px;
 }
 
 /* Responsive para pantallas más pequeñas */
 @media (max-width: 600px) {
-  .personaje-card img {
+  .personaje-card img, .favorito-card img {
     height: 200px;
   }
 }
@@ -241,4 +237,77 @@ footer button:hover {
   padding: 10px;
   border-radius: 10px;
   box-shadow: 0 2px 6px rgba(255, 255, 255, 0.1);
+}
+
+/* Estilo para la pestaña Informativa */
+.pestaña.informativa {
+  background-color: #333;
+  color: #ffd700;
+  border: 1px solid #444;
+  padding: 10px 20px;
+  border-radius: 20px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.pestaña.informativa:hover {
+  background-color: #5c3aff;
+  color: white;
+  transform: scale(1.05);
+  box-shadow: 0 0 10px rgba(92, 58, 255, 0.7);
+}
+
+/* Estilo para la sección Informativa */
+#informativa {
+  background: linear-gradient(135deg, #2c2c2c, #1a1a1a);
+  border-radius: 20px;
+  padding: 30px;
+  margin: 20px auto;
+  max-width: 800px;
+  box-shadow: 0 0 20px rgba(255, 215, 0, 0.3);
+  color: #f5f5f5;
+}
+
+#informativa .informacion-pestaña {
+  text-align: center;
+}
+
+#informativa .titulo-api {
+  font-size: 2rem;
+  color: #ffd700;
+  margin-bottom: 20px;
+}
+
+#informativa .imagen-api {
+  width: 100%;
+  height: auto;
+  max-width: 350px;
+  margin: 20px 0;
+  border-radius: 15px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+}
+
+#informativa .descripcion-api {
+  font-size: 1.2rem;
+  color: #ddd;
+  margin: 20px 0;
+}
+
+#informativa .usuario-github {
+  font-size: 1.1rem;
+  margin: 10px 0;
+}
+
+#informativa .version {
+  font-size: 1rem;
+  color: #ffd700;
+  margin-top: 20px;
+}
+
+#informativa .informacion-footer {
+  margin-top: 30px;
+  font-size: 1.1rem;
+  color: #ddd;
+  text-align: center;
 }
